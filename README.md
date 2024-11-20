@@ -21,7 +21,7 @@ bun dev
 ```
 
 
-```markdown
+
 # Índice
 - [1. Introdução](#1-introdução)
 - [2. Como Funciona](#2-como-funciona)
@@ -106,4 +106,3 @@ Cada recomendação inclui uma breve explicação, mas, em caso de dúvidas, é 
 
 **Nota:** Este manual foi criado para simplificar o uso do seu novo assistente de IA e garantir que você aproveite ao máximo seu potencial.  
 Se precisar de ajuda adicional, acesse nosso Suporte Técnico ou explore o tutorial no aplicativo.
-```
