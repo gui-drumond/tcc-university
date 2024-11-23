@@ -1,4 +1,4 @@
-import {  StringOutputParser, StructuredOutputParser } from "@langchain/core/output_parsers";
+import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatGroq } from "@langchain/groq";
 import { NextRequest } from "next/server";
@@ -8,31 +8,27 @@ const model = new ChatGroq({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-
-const promptAgent = `Você é um especialista em montagem de hardware para computadores,
-     focado em recomendar componentes de melhor custo-benefício a fim de economizar.
-     Suas sugestões devem se inciar em custo-benefício, desempenho, compatibilidade, upgrades futuros, eficiência energética e orçamento disponível,
-     se fornecer que quer gastar mais, use como base o valor do orçamento,
-     sempre com base nas tendências mais recentes do mercado. Responda apenas perguntas relacionadas à montagem de PCs e hardware. 
-     Os valores são geralmente em reais, não em dolar, siga esse padrão para conta, se precisar pergunte ao usuário.
-     Caso seja solicitado para para recomendar baseado em FPS, significa que quanto mais FPS, melhor. Um medidor bom é 30fps é low profile 60fps até 80fps mid profile e acima é high profile. 
+// const promptAgent = `Você é um especialista em montagem de hardware para computadores,
+//      focado em recomendar componentes de melhor custo-benefício a fim de economizar.
+//      Suas sugestões devem se inciar em custo-benefício, desempenho, compatibilidade, upgrades futuros, eficiência energética e orçamento disponível,
+//      se fornecer que quer gastar mais, use como base o valor do orçamento,
+//      sempre com base nas tendências mais recentes do mercado. Responda apenas perguntas relacionadas à montagem de PCs e hardware. 
+//      Os valores são geralmente em reais, não em dolar, siga esse padrão para conta, se precisar pergunte ao usuário.
+//      Caso seja solicitado para para recomendar baseado em FPS, significa que quanto mais FPS, melhor. Um medidor bom é 30fps é low profile 60fps até 80fps mid profile e acima é high profile. 
      
-     Para solicitações fora desse tema,
-     responda: "*Desculpe, só posso ajudar com montagem de computadores e hardware relacionado.*".`;
+//      Para solicitações fora desse tema,
+//      responda: "*Desculpe, só posso ajudar com montagem de computadores e hardware relacionado.*".`;
+// const prompt = ChatPromptTemplate.fromMessages([
+//   ["system", promptAgent],
+//   ["human", "{input}"],
+// ]);
 
-const promptStructedParser =  `
+const promptStructedParser = `
   You are a hardware specialist focused on recommending ideal components for different user profiles (gamers, editors, professionals, etc.).
   Extract information from the following messages:
   Formatting Instructions: {format_instructions}.
   Messages: {messages}.
-`
-
-const prompt = ChatPromptTemplate.fromMessages([
-  ["system", promptAgent],
-  ["human", "{input}"],
-]);
-
-
+`;
 
 async function callStructuredParser(data: string) {
   const prompt = ChatPromptTemplate.fromTemplate(promptStructedParser);
@@ -55,8 +51,6 @@ async function callStructuredParser(data: string) {
   });
 }
 
-
-
 export async function POST(request: Request) {
   const { query } = await request.json();
   console.log({
@@ -69,19 +63,16 @@ export async function POST(request: Request) {
   return Response.json({ ...resp });
 }
 
-
-export async function GET(
-  request: NextRequest 
-) {
+export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("search");
 
   console.log({
     log: new Date().toISOString(),
-    query
+    query,
   });
-  
-  const resp = query ? await callStructuredParser(query):{ data:"" }
+
+  const resp = query ? await callStructuredParser(query) : { data: "" };
 
   return Response.json({ ...resp });
 }
