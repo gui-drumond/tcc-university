@@ -1,4 +1,4 @@
-export default function VideoBoard(props: {
+export default function MemoryRam(props: {
   className?: string;
   width?: string;
   height?: string;
@@ -11,8 +11,6 @@ export default function VideoBoard(props: {
       xmlns="http://www.w3.org/2000/svg"
       x="0px"
       y="0px"
-      width="256px"
-      height="256px"
       viewBox="0 0 256 256"
     >
       <path

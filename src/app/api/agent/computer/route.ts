@@ -58,13 +58,15 @@ async function callStructuredParser(data: string) {
 
 
 export async function POST(request: Request) {
-  const { messages } = await request.json();
-  const parser = new StringOutputParser();
-  const chain = prompt.pipe(model).pipe(parser);
+  const { query } = await request.json();
+  console.log({
+    log: new Date().toISOString(),
+    query,
+  });
 
-  const resp = await chain.invoke({ input: messages });
-  
-  return Response.json({ input: resp });
+  const resp = query ? await callStructuredParser(query) : { data: "" };
+
+  return Response.json({ ...resp });
 }
 
 
@@ -74,11 +76,10 @@ export async function GET(
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("search");
 
-
-  const messages =
-    "Gostaria de jogar csgo com 300 fps, qual configuração de hardware você recomenda?";
-
-  console.log(query, messages);
+  console.log({
+    log: new Date().toISOString(),
+    query
+  });
   
   const resp = query ? await callStructuredParser(query):{ data:"" }
 

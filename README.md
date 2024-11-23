@@ -20,6 +20,10 @@ pnpm dev
 bun dev
 ```
 
+# Precisa criar um arquivo ```.env```
+
+
+- Dentro insira o valor da env da AI GROQ 
 
 
 # Índice
