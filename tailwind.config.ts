@@ -51,6 +51,10 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
       },
+      ringColor: {
+        "gradient-default":
+          "linear-gradient(to right, rgb(165, 180, 252), rgb(167, 243, 208) 70%)",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -58,7 +62,7 @@ export default {
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
-        roboto: ["Roboto",  "sans-serif"],
+        roboto: ["Roboto", "sans-serif"],
       },
     },
   },
