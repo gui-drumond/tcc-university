@@ -46,21 +46,24 @@ export default function Home() {
     <>
       <div className="flex flex-wrap flex-col gap-32 items-center w-full h-full min-h-screen bg-gray-400 bg-gradient-to-r from-indigo-300 from-3%  via-10% to-emerald-200 to-70%">
         <div className="w-full mt-36 max-w-5xl min-h-[500px] flex flex-col justify-center">
-          <h1 className="text-2xl font-bold text-center text-gray-600 mb-6">
-            IA Agente de Peças
+          <h1 className="text-4xl font-bold text-center text-slate-500 mb-6">
+            Consultor técnico de computadores
           </h1>
-          <Input
-            value={search}
-            onChange={async (e) => setSearch(e.target.value)}
-            placeholder="Que computador deseja montar? "
-            className="z-10 placeholder:text-xl  text-gray-600 bg-white rounded-3xl shadow-2xl p-8 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <Button
-            className="w-20 text-lg text-gray-700 bg-white rounded-xl hover:bg-slate-200"
-            onClick={handleSubmit}
-          >
-            Enviar
-          </Button>
+          <div className="flex gap-10">
+            <Input
+              value={search}
+              onChange={async (e) => setSearch(e.target.value)}
+              placeholder="Que computador deseja montar? "
+              style={{ fontSize: "1.5rem" }}
+              className="z-10 text-2xl text-gray-600 bg-white rounded-3xl shadow-2xl p-8 "
+            />
+            <Button
+              className="w-40 p-8 rounded-3xl shadow-2xl text-lg text-gray-700 bg-white  border hover:bg-gray-100 bg-gradient-to-r from-indigo-100 from-3%  via-10% to-emerald-100 to-70%"
+              onClick={handleSubmit}
+            >
+              Enviar
+            </Button>
+          </div>
         </div>
         {computerData && (
           <Suspense fallback={<p>Carregando...</p>}>
