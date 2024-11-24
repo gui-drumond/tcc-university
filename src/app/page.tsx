@@ -1,9 +1,8 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import SectionMiddle from "./components/sectionMiddle";
 import { Button } from "@/components/ui/button";
-import SkeletonMiddle from "./components/skeletonMiddle";
 import HowToWork from "./components/sectionMiddle/howtowork";
 import { ChevronRight } from "lucide-react";
 import Head from "next/head";
