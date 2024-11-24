@@ -1,11 +1,11 @@
 "use client";
 import { Input } from "@/components/ui/input";
-
 import { FormEvent, useState } from "react";
-import { Suspense } from "react";
 import SectionMiddle from "./components/sectionMiddle";
 import { Button } from "@/components/ui/button";
-
+import SkeletonMiddle from "./components/skeletonMiddle";
+import HowToWork from "./components/sectionMiddle/howtowork";
+import { ChevronRight } from "lucide-react";
 export interface ComputerData {
   videoboard: string;
   motherboard: string;
@@ -17,9 +17,12 @@ export interface ComputerData {
 export default function Home() {
   const [computerData, setComputerData] = useState<ComputerData>();
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    scrollTo({ top: 9999, behavior: "smooth" });
+    setLoading(true);
     try {
       if (!!search.trim()) {
         const response = await fetch("/api/agent/computer", {
@@ -36,40 +39,49 @@ export default function Home() {
         setSearch("");
         console.log("Resposta do Agente:", data);
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log("messages", JSON.stringify(computerData));
       console.error("Erro ao enviar solicitação:", error);
     }
+    
   };
 
   return (
     <>
-      <div className="flex flex-wrap flex-col gap-32 items-center w-full h-full min-h-screen bg-gray-400 bg-gradient-to-r from-indigo-300 from-3%  via-10% to-emerald-200 to-70%">
-        <div className="w-full mt-36 max-w-5xl min-h-[500px] flex flex-col justify-center">
-          <h1 className="text-4xl font-bold text-center text-slate-500 mb-6">
+      <div className="flex flex-wrap flex-col gap-32 items-center w-full h-full min-h-screen bg-default">
+        <div className="w-full mt-20 md:mt-36 md:max-w-5xl md:min-h-[65dvh] flex flex-col justify-center relative">
+          <h1 className="text-2xl md:text-4xl font-bold text-center text-slate-900 mb-6">
             Qual o computador que deseja montar ?
           </h1>
-          <div className="flex gap-10">
+          <div className="flex w-full md:w-[1120px] justify-center">
             <Input
+              className="md:w-full w-40 text text-gray-600 bg-white focus-visible:ring-transparent rounded-3xl shadow-2xl p-8 rounded-r-none "
               value={search}
               onChange={async (e) => setSearch(e.target.value)}
               placeholder="Diga sua necessidade ex: estudar programação, jogar csgo, etc..."
-              style={{ fontSize: "1.5rem" }}
-              className="z-10 text-2xl text-gray-600 bg-white   focus-visible:ring-transparent rounded-3xl shadow-2xl p-8 "
+              style={{ fontSize: "1rem" }}
             />
             <Button
-              className="w-40 p-8 rounded-3xl shadow-2xl text-lg text-gray-700 bg-white border hover:bg-gray-100 bg-gradient-to-r from-indigo-100 from-3%  via-10% to-emerald-100 to-70%"
+              className="w-30 p-8 rounded-3xl rounded-l-none shadow-2xl text-lg  border text-gray-700 bg-white  hover:bg-indigo-100"
               onClick={handleSubmit}
             >
               Enviar
             </Button>
           </div>
+          <Button
+            className="rounded-full rotate-90 animate-pulse absolute bottom-0 left-1/2"
+            variant="outline"
+            size="icon"
+            onClick={() => scrollTo({ top: 9999, behavior: "smooth" })}
+          >
+            <ChevronRight />
+          </Button>
         </div>
-        {computerData && (
-          <Suspense fallback={<p>Carregando...</p>}>
-            <SectionMiddle computer={computerData} />
-          </Suspense>
-        )}
+        <HowToWork />
+        {loading && <SkeletonMiddle />}
+        {computerData && <SectionMiddle computer={computerData} />}
       </div>
     </>
   );
