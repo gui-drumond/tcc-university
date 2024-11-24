@@ -1,19 +1,19 @@
-import { Suspense } from "react";
 import MotherBoard from "../../icons/motherboard";
 import VideoBoard from "../../icons/videoboard";
 import Storage from "../../icons/storage";
-import SkeletonMiddle from "../skeletonMiddle";
 import MemoryRam from "@/app/icons/memoryram";
 import PowerSupply from "@/app/icons/powersupply";
 import Cpu from "@/app/icons/cpu";
 import { ComputerData } from "@/app/page";
 import Card from "./cards";
+import SkeletonMiddle from "../skeletonMiddle";
 
 interface SectionMiddleProps {
-  computer:  ComputerData ;
+  computer:  ComputerData | undefined;
+  loading: boolean;
 }
 
-export default function SectionMiddle({ computer }: SectionMiddleProps) {
+export default function SectionMiddle({ computer, loading }: SectionMiddleProps) {
   const selectIcon: Record<
     string,
     { title: string; component: () => JSX.Element }
@@ -55,30 +55,24 @@ export default function SectionMiddle({ computer }: SectionMiddleProps) {
   };
 
   return (
-    <Suspense fallback={<SkeletonMiddle />}>
-      <div className="w-[100%] h-full bg-gray-50 flex flex-col align-middle  justify-center">
-        <div className="my-4 mx-32 py-16 ">
-          <h3 className="text-gray-90000 font-semibold text-4xl font-poppins mb-3">
-            Como funciona?
-          </h3>
-          <p className="text-xl ">
-            Você escolhe como será a utilizado o computador e nós devolveremos o
-            melhor custo-benefício, detalhando modelos e as peças. <br /> <br />
-            Essas informações serão listadas abaixo:
-          </p>
-        </div>
-        <div className="w-full h-[600px] flex flex-wrap mt-4 justify-evenly border-t-2  shadow font-poppins">
-          {selectIcon &&
-            Object.keys(selectIcon).map((icon) => (
-              <Card
-                key={icon}
-                title={selectIcon[icon as string].title}
-                icon={selectIcon[icon as string].component()}
-                description={computer[icon as keyof ComputerData]}
-              />
-            ))}
-        </div>
+    <div className="w-full  flex justify-center  bg-slate-200 pt-10 pb-20">
+      <div className="w-2/3  h-[600px] mt-10 flex flex-wrap   justify-evenly font-poppins border  ">
+      
+       { loading && Array.from({ length: 6 }).map((_, index) => (
+          <SkeletonMiddle key={index} />
+      ))}
+    
+        {!loading && computer &&
+          selectIcon &&
+          Object.keys(selectIcon).map((icon) => (
+            <Card
+              key={icon}
+              title={selectIcon[icon as string].title}
+              icon={selectIcon[icon as string].component()}
+              description={computer[icon as keyof ComputerData]}
+            />
+          ))}
       </div>
-    </Suspense>
+    </div>
   );
 }

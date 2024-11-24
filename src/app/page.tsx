@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import SkeletonMiddle from "./components/skeletonMiddle";
 import HowToWork from "./components/sectionMiddle/howtowork";
 import { ChevronRight } from "lucide-react";
+import Head from "next/head";
 export interface ComputerData {
   videoboard: string;
   motherboard: string;
@@ -19,8 +20,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     scrollTo({ top: 9999, behavior: "smooth" });
     setLoading(true);
     try {
@@ -50,18 +50,27 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex flex-wrap flex-col gap-32 items-center w-full h-full min-h-screen bg-default">
+      <Head>
+        <title>PC PARA {search}</title>
+        <meta property="og:title" content={`PC PARA ${search}`} key="title" />
+      </Head>
+      <div className="flex flex-wrap flex-col justify-between items-center w-full h-full min-h-screen bg-default">
         <div className="w-full mt-20 md:mt-36 md:max-w-5xl md:min-h-[65dvh] flex flex-col justify-center relative">
           <h1 className="text-2xl md:text-4xl font-bold text-center text-slate-900 mb-6">
-            Qual o computador que deseja montar ?
+            Qual será o principal uso do seu computador?
           </h1>
           <div className="flex w-full md:w-[1120px] justify-center">
             <Input
-              className="md:w-full w-40 text text-gray-600 bg-white focus-visible:ring-transparent rounded-3xl shadow-2xl p-8 rounded-r-none "
+              className="md:w-full w-40 text text-gray-600 bg-white focus-visible:ring-[none] rounded-3xl shadow-2xl p-8 rounded-r-none "
               value={search}
-              onChange={async (e) => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Diga sua necessidade ex: estudar programação, jogar csgo, etc..."
               style={{ fontSize: "1rem" }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSubmit();
+                }
+              }}
             />
             <Button
               className="w-30 p-8 rounded-3xl rounded-l-none shadow-2xl text-lg  border text-gray-700 bg-white  hover:bg-indigo-100"
@@ -80,8 +89,8 @@ export default function Home() {
           </Button>
         </div>
         <HowToWork />
-        {loading && <SkeletonMiddle />}
-        {computerData && <SectionMiddle computer={computerData} />}
+        
+        {<SectionMiddle computer={computerData} loading={loading}/>}
       </div>
     </>
   );
