@@ -54,13 +54,13 @@ export default function Home() {
         <meta property="og:title" content={`PC PARA ${search}`} key="title" />
       </Head>
       <div className="flex flex-wrap flex-col justify-between items-center w-full h-full min-h-screen bg-default">
-        <div className="w-full mt-20 md:mt-36 md:max-w-5xl md:min-h-[65dvh] flex flex-col justify-center relative">
+        <div className="w-full mt-[50%]  md:mt-36 md:max-w-5xl md:min-h-[65dvh] flex flex-col justify-center relative">
           <h1 className="text-2xl md:text-4xl font-bold text-center text-slate-900 mb-6">
             Qual será o principal uso do seu computador?
           </h1>
-          <div className="flex w-full md:w-[1120px] justify-center">
+          <div className="flex w-full md:w-[1120px] h-[600px] md:h-auto  justify-center">
             <Input
-              className="md:w-full w-40 text text-gray-600 bg-white focus-visible:ring-[none] rounded-3xl shadow-2xl p-8 rounded-r-none "
+              className="md:w-full w-[70%] text text-gray-600 bg-white focus-visible:ring-[none] rounded-3xl shadow-2xl p-8 rounded-r-none "
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Diga sua necessidade ex: estudar programação, jogar csgo, etc..."
@@ -88,8 +88,8 @@ export default function Home() {
           </Button>
         </div>
         <HowToWork />
-        
-        {<SectionMiddle computer={computerData} loading={loading}/>}
+
+        <SectionMiddle computer={computerData} loading={loading} />
       </div>
     </>
   );

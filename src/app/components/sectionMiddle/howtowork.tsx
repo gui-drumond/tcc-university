@@ -2,18 +2,18 @@ export default function HowToWork() {
     return (
       <>
         <div className="py-16 backdrop-brightness-95 w-full backdrop-blur-3xl mt-10 ">
-          <div className="mx-32 my-4">
+          <div className="mx-10 md:mx-32 my-4">
             <h3 className="text-gray-900 font-semibold text-4xl font-poppins mb-3  backdrop-opacity-30   ">
               Como funciona?
             </h3>
-            <p className="text-xl ">
+            <p className="text-xl w-full text-pretty text-justify">
               Seja bem-vindo ao Assistente de Configuração com IA! <br />
               Nosso compromisso é tornar a escolha de componentes para
               computadores uma experiência prática e confiável.
             </p>
             <br />
 
-            <p className="text-xl ">
+            <p className="text-xl  w-full text-pretty text-justify">
               Combinamos tecnologia avançada e inteligência artificial para
               oferecer recomendações personalizadas que equilibram desempenho,
               compatibilidade e custo-benefício. Nos dedicamos a atender desde

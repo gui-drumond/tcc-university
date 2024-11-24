@@ -64,13 +64,13 @@ export default function SectionMiddle({
       } `}
     >
       {loading && (
-        <div className="md:max-w-[2000px] md:h-auto h-full flex flex-wrap gap-4 w-full justify-center   mt-4 flex-col md:flex-row  font-poppins border ">
+        <div className="md:max-w-[2000px] md:h-[800px] h-full flex flex-wrap gap-4 w-full justify-center mt-4 items-center flex-col md:flex-row  font-poppins border ">
           {Array.from({ length: 6 }).map((_, index) => (
             <SkeletonMiddle key={index} />
           ))}
         </div>
       )}
-      {!loading && computer && selectIcon && (
+      { !loading && computer && selectIcon && (
         <div className="md:max-w-[2000px] md:h-[800px] h-full flex flex-wrap gap-4 w-full justify-center mt-4 items-center flex-col md:flex-row  font-poppins border ">
           {Object.keys(selectIcon).map((icon) => (
             <Card
