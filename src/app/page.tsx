@@ -58,7 +58,7 @@ export default function Home() {
           <h1 className="text-2xl md:text-4xl font-bold text-center text-slate-900 mb-6">
             Qual será o principal uso do seu computador?
           </h1>
-          <div className="flex w-full md:w-[1120px] h-[600px] md:h-auto  justify-center">
+          <div className="flex w-full md:w-[1120px] h-[50dvh] md:h-auto  justify-center">
             <Input
               className="md:w-full w-[70%] text text-gray-600 bg-white focus-visible:ring-[none] rounded-3xl shadow-2xl p-8 rounded-r-none "
               value={search}
@@ -79,7 +79,7 @@ export default function Home() {
             </Button>
           </div>
           <Button
-            className="rounded-full rotate-90 animate-pulse absolute bottom-0 left-1/2"
+            className="rounded-full rotate-90 animate-pulse absolute bottom-0 right-[42%]"
             variant="outline"
             size="icon"
             onClick={() => scrollTo({ top: 9999, behavior: "smooth" })}
