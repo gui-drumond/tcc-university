@@ -9,11 +9,14 @@ import Card from "./cards";
 import SkeletonMiddle from "../skeletonMiddle";
 
 interface SectionMiddleProps {
-  computer:  ComputerData | undefined;
+  computer: ComputerData | undefined;
   loading: boolean;
 }
 
-export default function SectionMiddle({ computer, loading }: SectionMiddleProps) {
+export default function SectionMiddle({
+  computer,
+  loading,
+}: SectionMiddleProps) {
   const selectIcon: Record<
     string,
     { title: string; component: () => JSX.Element }
@@ -55,16 +58,21 @@ export default function SectionMiddle({ computer, loading }: SectionMiddleProps)
   };
 
   return (
-    <div className="w-full  flex justify-center  bg-slate-200 pt-10 pb-20">
-      <div className="w-2/3  h-[600px] mt-10 flex flex-wrap   justify-evenly font-poppins border  ">
-      
-       { loading && Array.from({ length: 6 }).map((_, index) => (
-          <SkeletonMiddle key={index} />
-      ))}
-    
-        {!loading && computer &&
-          selectIcon &&
-          Object.keys(selectIcon).map((icon) => (
+    <div
+      className={`w-full flex justify-center  pt-10 pb-20 ${
+        !computer ? "bg-default" : "bg-slate-200"
+      } `}
+    >
+      {loading && (
+        <div className="md:max-w-[2000px] md:h-auto h-full flex flex-wrap gap-4 w-full justify-center   mt-4 flex-col md:flex-row  font-poppins border ">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <SkeletonMiddle key={index} />
+          ))}
+        </div>
+      )}
+      {!loading && computer && selectIcon && (
+        <div className="md:max-w-[2000px] md:h-[800px] h-full flex flex-wrap gap-4 w-full justify-center mt-4 items-center flex-col md:flex-row  font-poppins border ">
+          {Object.keys(selectIcon).map((icon) => (
             <Card
               key={icon}
               title={selectIcon[icon as string].title}
@@ -72,7 +80,8 @@ export default function SectionMiddle({ computer, loading }: SectionMiddleProps)
               description={computer[icon as keyof ComputerData]}
             />
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
