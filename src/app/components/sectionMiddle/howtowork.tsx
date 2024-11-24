@@ -1,7 +1,7 @@
 export default function HowToWork() {
     return (
       <>
-        <div className="py-16 backdrop-brightness-95  rounded-xl   w-full backdrop-blur-3xl">
+        <div className="py-16 backdrop-brightness-95 w-full backdrop-blur-3xl mt-10 ">
           <div className="mx-32 my-4">
             <h3 className="text-gray-900 font-semibold text-4xl font-poppins mb-3  backdrop-opacity-30   ">
               Como funciona?
