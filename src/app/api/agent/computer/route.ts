@@ -12,10 +12,10 @@ const model = new ChatGroq({
 //      focado em recomendar componentes de melhor custo-benefício a fim de economizar.
 //      Suas sugestões devem se inciar em custo-benefício, desempenho, compatibilidade, upgrades futuros, eficiência energética e orçamento disponível,
 //      se fornecer que quer gastar mais, use como base o valor do orçamento,
-//      sempre com base nas tendências mais recentes do mercado. Responda apenas perguntas relacionadas à montagem de PCs e hardware. 
+//      sempre com base nas tendências mais recentes do mercado. Responda apenas perguntas relacionadas à montagem de PCs e hardware.
 //      Os valores são geralmente em reais, não em dolar, siga esse padrão para conta, se precisar pergunte ao usuário.
-//      Caso seja solicitado para para recomendar baseado em FPS, significa que quanto mais FPS, melhor. Um medidor bom é 30fps é low profile 60fps até 80fps mid profile e acima é high profile. 
-     
+//      Caso seja solicitado para para recomendar baseado em FPS, significa que quanto mais FPS, melhor. Um medidor bom é 30fps é low profile 60fps até 80fps mid profile e acima é high profile.
+
 //      Para solicitações fora desse tema,
 //      responda: "*Desculpe, só posso ajudar com montagem de computadores e hardware relacionado.*".`;
 // const prompt = ChatPromptTemplate.fromMessages([
@@ -23,26 +23,52 @@ const model = new ChatGroq({
 //   ["human", "{input}"],
 // ]);
 
+
+
 const promptStructedParser = `
-  You are a hardware specialist focused on recommending ideal components for different user profiles (gamers, editors, professionals, etc.).
-  Extract information from the following messages:
-  Formatting Instructions: {format_instructions}.
-  Messages: {messages}.
+    Você é um especialista em hardware e deve recomendar componentes baseando-se no menor custo que atenda às especificações informadas.
+  Priorize componentes mais baratos e justifique suas escolhas baseando-se nos critérios abaixo:
+  - Desempenho mínimo necessário para as atividades descritas.
+  - Compatibilidade com os outros componentes.
+  - Eficiência energética (quando relevante).
+  - Orçamento total (se informado).
+
+  Instruções:
+  - Sempre busque o menor custo possível dentro do que foi solicitado pelo usuário.
+  - Se várias opções atenderem ao mesmo critério, escolha a peça mais barata disponível desde que seja compatível.
+  - Ordene as opções com base no preço crescente, justificando sua escolha.
+  - Se o orçamento disponível for informado, não ultrapasse o limite. Pergunte ao usuário, se necessário.
+  - Priorize desempenho adequado, mas com foco no custo-benefício.
+  - Para FPS: 30 FPS = básico, 60 FPS = médio, 80+ FPS = alta performance. Otimize para o perfil solicitado.
+
+  Responda no formato especificado: {format_instructions}.
+  Mensagem do usuário: {messages}.
 `;
+
+
+
 
 async function callStructuredParser(data: string) {
   const prompt = ChatPromptTemplate.fromTemplate(promptStructedParser);
+  
+
   const outputParser = StructuredOutputParser.fromNamesAndDescriptions({
-    cpu: "find the configuration and return model of the minimal required CPU",
+    cpu: "Escolha o modelo de CPU mais barato que atenda aos requisitos mínimos informados.",
     video_board:
-      "If necessary, this component finds the RAM configuration and return model of the GPU",
+      "Selecione a placa de vídeo mais barata compatível com o nível de desempenho solicitado.",
     memory_ram:
-      "find the ideal model and quantity, minimal required RAM memory",
-    storage: "find the configuration and return model of the RAM",
-    mother_board: "find the configuration and return model of the RAM",
+      "Recomende o modelo de RAM mais barato com a quantidade mínima necessária.",
+    storage:
+      "Indique o modelo de armazenamento (SSD ou HDD) mais barato que atenda à capacidade informada.",
+    mother_board:
+      "Selecione a placa-mãe mais barata que seja compatível com os outros componentes.",
     power_supply:
-      "find the power supply model based on the amount of power the entire pc will consume",
+      "Calcule o consumo total e escolha a fonte de alimentação mais barata que ofereça potência suficiente.",
+    total:
+      "Calcule o total aproximado das peças e retorne em BRL apenas o cifrão e os números.",
   });
+
+
   const chain = prompt.pipe(model).pipe(outputParser);
 
   return await chain.invoke({
