@@ -13,6 +13,7 @@ export interface ComputerData {
   storage: string;
   powerSupply: string;
   cpu: string;
+  total: string;
 }
 export default function Home() {
   const [computerData, setComputerData] = useState<ComputerData>();
@@ -88,7 +89,6 @@ export default function Home() {
           </Button>
         </div>
         <HowToWork />
-
         <SectionMiddle computer={computerData} loading={loading} />
       </div>
     </>
