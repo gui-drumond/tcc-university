@@ -26,11 +26,9 @@ export default function Home() {
   const [computerData, setComputerData] = useState<ComputerData>();
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
-  const [alreadyTour, setAlreadyTour] = useState<null|number>(0);
+  const [alreadyTour, setAlreadyTour] = useState<null | number>();
   const { toast } = useToast();
- 
 
-  
   const driverObj = driver({
     showProgress: true,
     steps: [
@@ -87,9 +85,12 @@ export default function Home() {
       scrollTo({ top: 0, behavior: "smooth" });
       driverObj.destroy();
     },
+
     onDestroyed: () => {
       console.log("Tour finalizado");
       localStorage.setItem("computerTour", String(alreadyTour ?? 0 + 1));
+      setAlreadyTour(3);
+      localStorage.setItem("computerTour", String(3));
     },
     nextBtnText: "Próximo",
     prevBtnText: "Anterior",
@@ -111,7 +112,7 @@ export default function Home() {
           }),
         });
         const data = await response.json();
-        
+
         if (data?.message) {
           toast({
             title: "Houve um erro ao enviar a solicitação",
@@ -120,7 +121,7 @@ export default function Home() {
               : "Por favor, tente novamente mais tarde",
             variant: "destructive",
           });
-        }else{
+        } else {
           setComputerData(data);
         }
       }
@@ -140,13 +141,21 @@ export default function Home() {
   };
 
   useEffect(() => {
+
     if (typeof window !== "undefined") {
-      setAlreadyTour(Number(localStorage.getItem("computerTour")));
+      const tour = Number(localStorage.getItem("computerTour"));
+      setAlreadyTour(tour);
+      if (!tour) {
+        localStorage.setItem("computerTour", String(0));
+        setAlreadyTour(0);
+        driverObj.drive();
+      }
+      if (tour! <= 1) {
+        driverObj.drive();
+      }
     }
-    if (!alreadyTour || alreadyTour <= 1) {
-      driverObj.drive();
-      localStorage.setItem("computerTour", String(alreadyTour ?? 0 + 1));
-    }
+    
+
   }, [alreadyTour, driverObj]);
 
   const detailsToSearch = {
