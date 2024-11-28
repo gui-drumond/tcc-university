@@ -10,6 +10,7 @@ import { Info } from "lucide-react";
 import Tooltip from "./components/tooltip";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import { useToast } from "@/hooks/use-toast";
 
 export interface ComputerData {
   videoboard: string;
@@ -19,12 +20,14 @@ export interface ComputerData {
   powerSupply: string;
   cpu: string;
   total: string;
+  message?: string;
 }
 export default function Home() {
   const [computerData, setComputerData] = useState<ComputerData>();
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
-  const alreadyTour = Number(localStorage.getItem("computerTour"));
+  const { toast } = useToast();
+  const alreadyTour = Number(localStorage.getItem("computerTour") ?? 0);
   const driverObj = driver({
     showProgress: true,
     steps: [
@@ -79,7 +82,7 @@ export default function Home() {
     ],
     onCloseClick: () => {
       scrollTo({ top: 0, behavior: "smooth" });
-      driverObj.destroy()
+      driverObj.destroy();
     },
     onDestroyed: () => {
       console.log("Tour finalizado");
@@ -105,12 +108,28 @@ export default function Home() {
           }),
         });
         const data = await response.json();
-        setComputerData(data);
-        setSearch("");
-        console.log("Resposta do Agente:", data);
+        
+        if (data?.message) {
+          toast({
+            title: "Houve um erro ao enviar a solicitação",
+            description: data?.message
+              ? data?.message
+              : "Por favor, tente novamente mais tarde",
+            variant: "destructive",
+          });
+        }else{
+          setComputerData(data);
+        }
       }
       setLoading(false);
     } catch (error) {
+      toast({
+        title: "Houve um erro ao enviar a solicitação",
+        description: computerData?.message
+          ? computerData?.message
+          : "Por favor, tente novamente mais tarde",
+        variant: "destructive",
+      });
       setLoading(false);
       console.log("messages", JSON.stringify(computerData));
       console.error("Erro ao enviar solicitação:", error);
@@ -118,7 +137,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (!alreadyTour ||  alreadyTour <= 1) {
+    if (!alreadyTour || alreadyTour <= 1) {
       driverObj.drive();
       localStorage.setItem("computerTour", String(alreadyTour + 1));
     }

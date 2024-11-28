@@ -71,10 +71,23 @@ async function callStructuredParser(data: string) {
 
   const chain = prompt.pipe(model).pipe(outputParser);
 
-  return await chain.invoke({
-    messages: data,
-    format_instructions: outputParser.getFormatInstructions(),
-  });
+
+  let resp 
+
+  try {
+    resp = await chain.invoke({
+      messages: data,
+      format_instructions: outputParser.getFormatInstructions(),
+    });
+  } catch (error: unknown) {
+    resp = {
+      message: "Necessidades não podem ser atendidas.",
+      error,
+    };
+  }
+
+
+  return resp;
 }
 
 export async function POST(request: Request) {
@@ -97,8 +110,21 @@ export async function GET(request: NextRequest) {
     log: new Date().toISOString(),
     query,
   });
-
-  const resp = query ? await callStructuredParser(query) : { data: "" };
+  
+  let resp
+  try {
+     resp = query
+      ? await callStructuredParser(query)
+      : {
+          message: "Necessidades não podem ser atendidas.",
+        };
+  } catch (error: unknown) {
+    resp =  {
+          message: "Necessidades não podem ser atendidas.",
+          error
+        };
+  }
+  
 
   return Response.json({ ...resp });
 }

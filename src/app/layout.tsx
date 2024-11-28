@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Roboto } from "next/font/google";
 import Navbar from "./components/navbar";
+import { Toaster } from "@/components/ui/toaster";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["100", "400","500", "700", "900"] });
 const poppins = Roboto({
@@ -32,11 +33,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-br">
       <body
         className={` ${geistSans.variable} ${geistMono.variable} ${roboto.className} ${poppins.className} antialiased`}
       >
         <Navbar />
+        <Toaster />
         {children}
       </body>
     </html>
