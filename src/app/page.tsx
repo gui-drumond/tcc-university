@@ -30,9 +30,7 @@ export default function Home() {
   const { toast } = useToast();
  
 
-  if (typeof window !== "undefined") {
-    setAlreadyTour(Number(localStorage.getItem("computerTour")));
-  }
+  
   const driverObj = driver({
     showProgress: true,
     steps: [
@@ -142,6 +140,9 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setAlreadyTour(Number(localStorage.getItem("computerTour")));
+    }
     if (!alreadyTour || alreadyTour <= 1) {
       driverObj.drive();
       localStorage.setItem("computerTour", String(alreadyTour ?? 0 + 1));
