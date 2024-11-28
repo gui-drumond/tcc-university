@@ -26,7 +26,7 @@ export default function Home() {
   const [computerData, setComputerData] = useState<ComputerData>();
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
-  const [alreadyTour, setAlreadyTour] = useState<null|number>();
+  const [alreadyTour, setAlreadyTour] = useState<null|number>(0);
   const { toast } = useToast();
  
 
