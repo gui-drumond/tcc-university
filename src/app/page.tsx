@@ -26,8 +26,13 @@ export default function Home() {
   const [computerData, setComputerData] = useState<ComputerData>();
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [alreadyTour, setAlreadyTour] = useState<null|number>();
   const { toast } = useToast();
-  const alreadyTour = Number(localStorage.getItem("computerTour") ?? 0);
+ 
+
+  if (typeof window !== "undefined") {
+    setAlreadyTour(Number(localStorage.getItem("computerTour")));
+  }
   const driverObj = driver({
     showProgress: true,
     steps: [
@@ -86,7 +91,7 @@ export default function Home() {
     },
     onDestroyed: () => {
       console.log("Tour finalizado");
-      localStorage.setItem("computerTour", String(alreadyTour + 1));
+      localStorage.setItem("computerTour", String(alreadyTour ?? 0 + 1));
     },
     nextBtnText: "Próximo",
     prevBtnText: "Anterior",
@@ -139,7 +144,7 @@ export default function Home() {
   useEffect(() => {
     if (!alreadyTour || alreadyTour <= 1) {
       driverObj.drive();
-      localStorage.setItem("computerTour", String(alreadyTour + 1));
+      localStorage.setItem("computerTour", String(alreadyTour ?? 0 + 1));
     }
   }, [alreadyTour, driverObj]);
 

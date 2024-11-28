@@ -81,7 +81,7 @@ export default function SectionMiddle({
               key={icon}
               title={selectIcon[icon as string].title}
               icon={selectIcon[icon as string].component()}
-              description={computer[icon as keyof ComputerData]}
+              description={computer[icon as keyof ComputerData]??''}
             />
           ))}
         </div>
