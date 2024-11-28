@@ -1,11 +1,16 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SectionMiddle from "./components/sectionMiddle";
 import { Button } from "@/components/ui/button";
 import HowToWork from "./components/sectionMiddle/howtowork";
 import { ChevronRight } from "lucide-react";
 import Head from "next/head";
+import { Info } from "lucide-react";
+import Tooltip from "./components/tooltip";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+
 export interface ComputerData {
   videoboard: string;
   motherboard: string;
@@ -19,12 +24,77 @@ export default function Home() {
   const [computerData, setComputerData] = useState<ComputerData>();
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const alreadyTour = Number(localStorage.getItem("computerTour"));
+  const driverObj = driver({
+    showProgress: true,
+    steps: [
+      {
+        element: "#searchContainer",
+        popover: {
+          title: "Seja bem-vindo! ",
+          description:
+            "Aqui você fará a pesquisa pelo computador baseado na sua necessidade.",
+          side: "left",
+          align: "start",
+        },
+      },
+      {
+        element: "#searchInput",
+        popover: {
+          title: "Escreva",
+          description:
+            'Coloque aqui a necessidade de uso \n Ex: "Estudar programação em JAVA e REACT", "Tenho R$ 2.000,00 para o PC inteiro", "Quero custo baixo, mas com upgrade fácil no futuro", "Jogar csgo no maximo a 80fps", etc...',
+          side: "bottom",
+          align: "start",
+        },
+      },
+      {
+        element: "#detailsToSearch",
+        popover: {
+          title: "Dúvidas?",
+          description:
+            "Se tiver dúvidas coloque o mouse sobre esse botão, ele lhe dará informações sobre o porquê de detalhar sua necessidade.",
+          side: "left",
+          align: "start",
+        },
+      },
+      {
+        element: "#submitInput",
+        popover: {
+          title: "Enviar necessidade(s)",
+          description:
+            "Clique aqui para enviar a solicitação e receber a recomendação.",
+          side: "bottom",
+          align: "start",
+        },
+      },
+      {
+        element: "#moreAbout",
+        popover: {
+          title: "Mais sobre nossa IA",
+          side: "top",
+          align: "start",
+        },
+      },
+    ],
+    onCloseClick: () => {
+      scrollTo({ top: 0, behavior: "smooth" });
+      driverObj.destroy()
+    },
+    onDestroyed: () => {
+      console.log("Tour finalizado");
+      localStorage.setItem("computerTour", String(alreadyTour + 1));
+    },
+    nextBtnText: "Próximo",
+    prevBtnText: "Anterior",
+    doneBtnText: "Finalizar",
+  });
 
   const handleSubmit = async () => {
-    scrollTo({ top: 9999, behavior: "smooth" });
     setLoading(true);
     try {
       if (!!search.trim()) {
+        scrollTo({ top: 9999, behavior: "smooth" });
         const response = await fetch("/api/agent/computer", {
           method: "POST",
           headers: {
@@ -45,7 +115,22 @@ export default function Home() {
       console.log("messages", JSON.stringify(computerData));
       console.error("Erro ao enviar solicitação:", error);
     }
-    
+  };
+
+  useEffect(() => {
+    if (!alreadyTour ||  alreadyTour <= 1) {
+      driverObj.drive();
+      localStorage.setItem("computerTour", String(alreadyTour + 1));
+    }
+  }, [alreadyTour, driverObj]);
+
+  const detailsToSearch = {
+    title: "Por que detalhar seu pedido?",
+    description: ` 
+  Quanto mais claro e detalhado você for, mais precisas serão as recomendações da IA. 
+  Inclua informações como orçamento, requisitos mínimos e preferências. 
+  Assim, garantimos resultados alinhados às suas necessidades 
+  e focados no melhor custo-benefício.`,
   };
 
   return (
@@ -59,9 +144,31 @@ export default function Home() {
           <h1 className="text-2xl md:text-4xl font-bold text-center text-slate-900 mb-6">
             Qual será o principal uso do seu computador?
           </h1>
-          <div className="flex w-full md:w-[1120px] h-[50dvh] md:h-auto  justify-center">
+          <div
+            id="searchContainer"
+            className="flex w-full md:w-[1120px] h-[50dvh] md:h-auto  justify-center"
+          >
+            <Tooltip
+              title={detailsToSearch.title}
+              description={detailsToSearch.description}
+            >
+              <Button
+                id="detailsToSearch"
+                className="w-34 p-8 rounded-3xl rounded-r-none shadow-2xl text-lg  border text-gray-700 bg-white  hover:bg-indigo-100"
+                onClick={() => console.log("")}
+              >
+                <Info
+                  style={{
+                    width: "1.5rem",
+                    height: "1.5rem",
+                  }}
+                />
+              </Button>
+            </Tooltip>
+
             <Input
-              className="md:w-full w-[70%] text text-gray-600 bg-white focus-visible:ring-[none] rounded-3xl shadow-2xl p-8 rounded-r-none "
+              id="searchInput"
+              className="md:w-[65%] w-[70%] text text-gray-600 bg-white focus-visible:ring-[none] rounded-3xl shadow-2xl p-8 rounded-r-none  rounded-l-none z-0 "
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Diga sua necessidade ex: estudar programação, jogar csgo, etc..."
@@ -73,6 +180,7 @@ export default function Home() {
               }}
             />
             <Button
+              id="submitInput"
               className="w-30 p-8 rounded-3xl rounded-l-none shadow-2xl text-lg  border text-gray-700 bg-white  hover:bg-indigo-100"
               onClick={handleSubmit}
             >
